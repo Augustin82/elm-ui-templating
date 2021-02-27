@@ -1,6 +1,7 @@
 export * from './lib/async';
 export * from './lib/number';
 import express from 'express';
+import WebSocket from 'ws';
 
 import { initElmEngine } from './lib/renderElm.js';
 const elmEngine = initElmEngine();
@@ -8,6 +9,16 @@ const elmEngine = initElmEngine();
 const app = express();
 
 const PORT = process.env.PORT || 4000;
+
+const wss = new WebSocket.Server({ noServer: true, handleProtocols: true });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('something');
+});
 
 app.get('/', (_req, res) => res.send('Hello from server!'));
 
@@ -28,6 +39,15 @@ app.get('/default', async (_req, res) => {
   res.send(html);
 });
 
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(`⚡Server is running here 👉 http://localhost:${PORT}`)
 );
+
+// `server` is a vanilla Node.js HTTP server, so use
+// the same ws upgrade process described here:
+// https://www.npmjs.com/package/ws#multiple-servers-sharing-a-single-https-server
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (socket) => {
+    wss.emit('connection', socket, request);
+  });
+});
