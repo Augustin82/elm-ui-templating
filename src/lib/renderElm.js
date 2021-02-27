@@ -19,7 +19,6 @@ try {
   const starter =
     'var app = Elm.Main.init({' +
     '  node: document.getElementById("main"),' +
-    // `  flags: ${JSON.stringify(params)},` +
     '});';
   const script = new Script(`${elmApp}\n${starter}`);
   script.runInContext(vmContext);
