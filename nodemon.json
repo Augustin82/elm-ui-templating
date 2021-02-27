@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "delay": 1000,
+  "exec": "ts-eager ./src/index.ts",
+  "ignore": ["**/db.json", "*.test.js", "fixtures/*"],
+  "ext": "js,ts,json",
+  "watch": ["src/**/*.ts", "src/**/*.js"]
+}
