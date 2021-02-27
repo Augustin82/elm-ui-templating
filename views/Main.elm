@@ -4,6 +4,8 @@ import Browser
 import Element exposing (..)
 import Html
 import Json.Decode as Decode
+import Pages.Default
+import Pages.Error
 
 
 type Msg
@@ -15,14 +17,20 @@ type alias Flags =
 
 
 type Model
-    = Default String
+    = Default Pages.Default.Model
+    | Error Pages.Error.Model
+
+
+errorPage : Model
+errorPage =
+    Pages.Error.init "No params!" |> Error
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( flags
         |> Decode.decodeValue decodeFlags
-        |> Result.withDefault (Default "No params!")
+        |> Result.withDefault errorPage
     , Cmd.none
     )
 
@@ -34,7 +42,7 @@ decodeFlags =
             (\page ->
                 case page |> String.toLower of
                     "default" ->
-                        Decode.field "text" Decode.string
+                        Pages.Default.parser
                             |> Decode.map Default
 
                     _ ->
@@ -46,11 +54,11 @@ view : Model -> Html.Html msg
 view model =
     layout [] <|
         case model of
-            Default txt ->
-                el [ centerX ] <|
-                    text <|
-                        "Default page, message is: "
-                            ++ txt
+            Default m ->
+                Pages.Default.view m
+
+            Error m ->
+                Pages.Error.view m
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -59,7 +67,7 @@ update msg _ =
         ChangePage flags ->
             ( flags
                 |> Decode.decodeValue decodeFlags
-                |> Result.withDefault (Default "No params!")
+                |> Result.withDefault errorPage
             , Cmd.none
             )
 

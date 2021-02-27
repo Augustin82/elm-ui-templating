@@ -2,7 +2,8 @@ export * from './lib/async';
 export * from './lib/number';
 import express from 'express';
 
-import { renderElmApp } from './lib/renderElm.js';
+import { initElmEngine } from './lib/renderElm.js';
+const elmEngine = initElmEngine();
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.get('/', (_req, res) => res.send('Hello from server!'));
 
 app.get('/default/:text', async (req, res) => {
   const text = req.params.text;
-  const content = await renderElmApp({ page: 'default', text });
+  const content = await elmEngine.render({ page: 'default', params: { text } });
 
   res.send(content);
 });
