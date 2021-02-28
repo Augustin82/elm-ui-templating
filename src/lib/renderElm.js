@@ -7,6 +7,7 @@ export function initElmEngine() {
   const elmAppPath = './views/view.js';
   const html =
     '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">' +
+    '<script type="module">import hotwiredTurbo from "https://cdn.skypack.dev/@hotwired/turbo";</script>' +
     '</head><body>' +
     '<div id="main">' +
     '</div></body></html>';

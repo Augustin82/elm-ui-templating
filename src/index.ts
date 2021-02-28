@@ -32,9 +32,12 @@ app.get('/default/:text', async (req, res) => {
 app.get('/default', async (_req, res) => {
   const html =
     '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">' +
+    '<script>window.test = "hey";</script>' +
+    '<script type="module">import hotwiredTurbo from "https://cdn.skypack.dev/@hotwired/turbo";</script>' +
     '</head><body>' +
     '<div id="main">' +
     'Plain HTML!' +
+    '<a href="/default/blah" data-turbo-action="advance">Show me blah!</a>' +
     '</div></body></html>';
   res.send(html);
 });
