@@ -30,7 +30,7 @@ export function initElmEngine() {
    * @returns {Promise<string>}
    */
   function render({ page, params }) {
-    const local = `document.app.ports.changePage.send(${JSON.stringify({
+    const local = `window.elmApp.ports.changePage.send(${JSON.stringify({
       page,
       ...params
     })});`;
